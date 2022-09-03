@@ -6,7 +6,7 @@ const bobPrivKey = bsv.PrivKey.fromString("L1H2Zz694soUr9T3ygEdDi57VKnKW6yhKYa4Z
 console.log("Bob PrivKey: ",bobPrivKey.toString())
 
 const alicePubKey = bsv.PubKey.fromPrivKey(bsv.PrivKey.fromString("L2viUUvqF7WzxMNTExSa277STdSRQX2vYpWE4pnxWuunHAoiLHsb"));
-console.log("Bob PubKey: ", alicePubKey.toString())
+console.log("Alice PubKey: ", alicePubKey.toString())
 
 const dh = bsv.Ecies.ivkEkM(bobPrivKey, alicePubKey)
 
