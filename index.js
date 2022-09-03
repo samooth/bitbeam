@@ -1,11 +1,12 @@
 const { Duplex } = require('streamx')
 const sodium = require('sodium-universal')
+const { Ecies } = require('bsv')
 const b4a = require('b4a')
 const queueTick = require('queue-tick')
 const b32 = require('hi-base32')
 const DHT = require('@hyperswarm/dht')
 
-module.exports = class Hyperbeam extends Duplex {
+module.exports = class BitBeam extends Duplex {
   constructor (key, options) {
     super()
 
@@ -22,7 +23,10 @@ module.exports = class Hyperbeam extends Duplex {
 
     let announce = !!options.announce
 
-    if (!key) {
+    if (!key && options.hasOwnProperty("from") &&  options.hasOwnProperty("to") ) {
+      key = toBase32(Ecies.ivkEkM(options.from, options.to).kM )
+      announce = true
+    }else if (!key){
       key = toBase32(randomBytes(32))
       announce = true
     }
