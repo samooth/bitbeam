@@ -4,7 +4,7 @@
   "description": "A 1-1 end-to-end encrypted internet pipe powered by Hyperswarm",
   "main": "index.js",
   "bin": {
-    "hyperbeam": "./bin.js"
+    "bitbeam": "./bin.js"
   },
   "scripts": {
     "test": "standard"
