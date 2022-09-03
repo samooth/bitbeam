@@ -18,7 +18,7 @@ const toPubKey = bsv.PubKey.fromPrivKey(bsv.PrivKey.fromString("L2viUUvqF7WzxMNT
 // key is 32-byte unique passphrase
 // to find the other side of your pipe.
 // once the other peer is discovered it is used to derive a noise keypair as well.
-const beam = new Hyperbeam({from: fromPrivKey ,to: toPubKey})
+const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
 
 // to generate a passphrase, leave the constructor empty and hyperbeam will generate one for you
 // const beam = new Hyperbeam()
