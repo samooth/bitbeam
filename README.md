@@ -13,7 +13,7 @@ const BitBeam = require('bitbeam')
 // Alice Private Key
 const fromPrivKey = bsv.PrivKey.fromString("L1H2Zz694soUr9T3y...")
 // Bob Public Key
-const toPubKey = bsv.PubKey.fromPrivKey(bsv.PrivKey.fromString("L2viUUvqF7WzxMNTExSa27..."));
+const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
 
 // key is 32-byte unique passphrase
 // to find the other side of your pipe.
@@ -29,10 +29,6 @@ process.stdin.pipe(beam).pipe(process.stdout)
 ```
 
 ## CLI
-
-Part of the [Hyperspace CLI, hyp](https://github.com/hypercore-protocol/cli)
-
-Provided here as a standalone CLI as well.
 
 First install it
 
