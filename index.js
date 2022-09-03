@@ -25,7 +25,7 @@ module.exports = class BitBeam extends Duplex {
 
     if (!key && options.hasOwnProperty("from") &&  options.hasOwnProperty("to") ) {
       key = toBase32(Ecies.ivkEkM(options.from, options.to).kM )
-      announce = true
+      announce = options.announce || true
     }else if (!key){
       key = toBase32(randomBytes(32))
       announce = true
