@@ -1,6 +1,6 @@
 # bitbeam
 
-A 1-1 end-to-end encrypted internet pipe powered by [Hyperswarm](https://github.com/hyperswarm/hyperswarm) and Noise & Bitcoin
+A 1-1 end-to-end encrypted internet pipe powered by [Hyperswarm](https://github.com/hyperswarm/hyperswarm), Noise & Bitcoin
 
 ```
 npm install git+https://github.com/samooth/bitbeam
@@ -18,6 +18,8 @@ const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
 // key is 32-byte unique passphrase
 // to find the other side of your pipe.
 // once the other peer is discovered it is used to derive a noise keypair as well.
+// bitbeam uses ECDH to generate the unique passphrase
+// when from: and to: are specified as options
 const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
 
 // to generate a passphrase, leave the constructor empty and bitbeam will generate one for you
