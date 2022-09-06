@@ -1,7 +1,7 @@
 {
   "name": "bitbeam",
-  "version": "2.0.1.1",
-  "description": "A 1-1 end-to-end encrypted internet pipe powered by Hyperswarm",
+  "version": "2.0.2",
+  "description": "A 1-1 end-to-end encrypted internet pipe powered by Hyperswarm & Bitcoin",
   "main": "index.js",
   "bin": {
     "bitbeam": "./bin.js"
