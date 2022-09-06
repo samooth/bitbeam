@@ -15,14 +15,15 @@ const fromPrivKey = bsv.PrivKey.fromString("L1H2Zz694soUr9T3y...")
 // Bob Public Key
 const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
 
-// key is 32-byte unique passphrase
-// to find the other side of your pipe.
+// key is 32-byte unique passphrase to find the other side of your pipe.
 // once the other peer is discovered it is used to derive a noise keypair as well.
-// bitbeam uses ECDH to generate the unique passphrase
-// when from: and to: are specified as options
+// bitbeam uses ECDH to generate the unique passphrase when 
+// from: and to: are specified in the options object, being, 
+// from: the Bitcoin Private Key of Alice and
+// to: the Bitcoin Public Key of Bob
 const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
 
-// to generate a passphrase, leave the constructor empty and bitbeam will generate one for you
+// to generate a random passphrase, leave the constructor empty and bitbeam will generate one for you
 // const beam = new BitBeam()
 // beam.key // <-- your passphrase
 
