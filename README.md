@@ -20,8 +20,8 @@ const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
 // once the other peer is discovered it is used to derive a noise keypair as well.
 const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
 
-// to generate a passphrase, leave the constructor empty and hyperbeam will generate one for you
-// const beam = new Hyperbeam()
+// to generate a passphrase, leave the constructor empty and bitbeam will generate one for you
+// const beam = new BitBeam()
 // beam.key // <-- your passphrase
 
 // make a little chat app
