@@ -1,4 +1,4 @@
-const BitBeam = require('../index.js')
+const BitBeam = require('../../index.js')
 const bsv = require('bsv')
 
 const alicePrivKey = bsv.PrivKey.fromString("L2viUUvqF7WzxMNTExSa277STdSRQX2vYpWE4pnxWuunHAoiLHsb")

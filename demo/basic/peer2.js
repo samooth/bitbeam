@@ -1,4 +1,4 @@
-const BitBeam = require('../index.js')
+const BitBeam = require('../../index.js')
 const bsv = require('bsv')
 const b32 = require('hi-base32')
 
