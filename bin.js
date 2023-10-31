@@ -47,6 +47,7 @@ beam.on('error', function (e) {
 beam.on('end', () => beam.end())
 
 process.stdin.pipe(beam).pipe(process.stdout)
+
 if (typeof process.stdin.unref === 'function') process.stdin.unref()
 
 process.once('SIGINT', () => {

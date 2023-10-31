@@ -1,5 +1,5 @@
 const BitBeam = require('../../index.js')
-const bsv = require('bsv')
+const bsv = require('bsv2')
 
 const alicePrivKey = bsv.PrivKey.fromString("L2viUUvqF7WzxMNTExSa277STdSRQX2vYpWE4pnxWuunHAoiLHsb")
 console.log("Alice PrivKey: ",alicePrivKey.toString())
@@ -10,6 +10,12 @@ console.log("Bob PubKey", bobPubKey.toString())
 // once the other peer is discovered it is used to derive a noise keypair as well.
 
 const beam = new BitBeam({ from: alicePrivKey, to: bobPubKey })
+beam.on("connected",()=>{
+	console.log("Connected");
+})
+beam.on("remote-address",(addr)=>{
+	console.log("Connection from: ",addr.host, addr.port);
+})
 
 // to generate a passphrase, leave the constructor empty and hyperbeam will generate one for you
 // const beam = new Hyperbeam()

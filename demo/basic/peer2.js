@@ -1,6 +1,5 @@
 const BitBeam = require('../../index.js')
-const bsv = require('bsv')
-const b32 = require('hi-base32')
+const bsv = require('bsv2')
 
 const bobPrivKey = bsv.PrivKey.fromString("L1H2Zz694soUr9T3ygEdDi57VKnKW6yhKYa4ZL1z8KWc7Cz2QwDH")
 console.log("Bob PrivKey: ",bobPrivKey.toString())
@@ -14,10 +13,25 @@ const dh = bsv.Ecies.ivkEkM(bobPrivKey, alicePubKey)
 // to find the other side of your pipe.
 // once the other peer is discovered it is used to derive a noise keypair as well.
 
-const key = b32.encode(dh.kM).replace(/=/g, '').toLowerCase()
+const key = BitBeam.toBase32(dh.kM)
 
-const beam = new BitBeam( key )
+const beam = new BitBeam( { from: bobPrivKey, to: alicePubKey }, false )
 
+beam.on("connected",(peer)=>{
+	console.log("connected:", peer)
+})
+
+	beam.on("remote-address",(addr)=>{
+		console.log("Connection from: ",addr.host, addr.port)
+	})
+	beam.on("close",(peer)=>{
+		console.log("disconnected")
+		console.log(peer)
+	})
+	beam.on("error",(error)=>{
+		console.log("error",error?.code)		
+
+	})
 // to generate a passphrase, leave the constructor empty and hyperbeam will generate one for you
 // const beam = new Hyperbeam()
 // beam.key // <-- your passphrase
