@@ -113,10 +113,6 @@ module.exports = class BitBeam extends Duplex {
           this.emit('error', err)
 
       })
-      s.on('close',(peer)=>{
-          this.emit('close',peer)
-
-      })      
       s.on('end', () => {
         this.emit('end', { host: this._node.host, port: this._node.port })
         if (this._inc) return
