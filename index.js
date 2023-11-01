@@ -153,12 +153,11 @@ module.exports = class BitBeam extends Duplex {
     try {
       await new Promise((resolve, reject) => {
         connection.once('open', resolve)
-        connection.once('close',(p)=>{ this.emit('close', p); reject(p); })
-        connection.once('error',(p)=>{ this.emit('error', p); reject(p); })
+        connection.once('close', reject)
+        connection.once('error', reject)
       })
     } catch (err) {
       this._onopenDone(err)
-      this.emit('error', err);
       return
     }
     this.emit('remote-address', { host: this._node.host, port: this._node.port })
