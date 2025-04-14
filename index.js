@@ -1,10 +1,10 @@
 const { Duplex } = require('streamx')
 const sodium = require('sodium-universal')
-const { Ecies,Hash } = require('bsv2')
+const { Ecies } = require('bsv2')
 const b4a = require('b4a')
 const queueTick = require('queue-tick')
 const b32 = require('hi-base32')
-const DHT = require('@hyperswarm/dht')
+const DHT = require('spacedht')
 
 function toBase32 (buf) {
   return b32.encode(buf).replace(/=/g, '').toLowerCase()
@@ -20,7 +20,6 @@ function randomBytes (length) {
   return buffer
 }
 
-
 module.exports = class BitBeam extends Duplex {
   constructor (key, options) {
     super()
@@ -35,10 +34,10 @@ module.exports = class BitBeam extends Duplex {
     } else if (typeof options !== 'object') {
       options = {}
     }
-    let announce = options.hasOwnProperty("announce") ? options.announce : true
-    if ( key?.from &&  key?.to ) {
-      key = toBase32( Ecies.ivkEkM(key.from, key.to).kM  )
-    }else if (!key){
+    let announce = options.hasOwnProperty('announce') ? options.announce : true
+    if (key?.from && key?.to) {
+      key = toBase32(Ecies.ivkEkM(key.from, key.to).kM)
+    } else if (!key) {
       key = toBase32(randomBytes(32))
       announce = true
     }
@@ -109,9 +108,8 @@ module.exports = class BitBeam extends Duplex {
         if (s !== this._inc) return
         if (this._push(data) === false) s.pause()
       })
-      s.on('error',(err)=>{
-          this.emit('error', err)
-
+      s.on('error', (err) => {
+        this.emit('error', err)
       })
       s.on('end', () => {
         this.emit('end', { host: this._node.host, port: this._node.port })
@@ -205,6 +203,4 @@ module.exports = class BitBeam extends Duplex {
     await this._node.destroy().catch(e => undefined)
     cb(null)
   }
-
 }
-

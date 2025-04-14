@@ -1,7 +1,7 @@
 {
   "name": "bitbeam",
-  "version": "3.0.4",
-  "description": "A 1-1 end-to-end encrypted internet pipe powered by Hyperswarm",
+  "version": "3.0.5",
+  "description": "A 1-1 end-to-end encrypted internet pipe powered by SpaceSwarm",
   "main": "index.js",
   "bin": {
     "bitbeam": "./bin.js"
@@ -10,16 +10,16 @@
     "test": "standard"
   },
   "dependencies": {
-    "@hyperswarm/dht": "^6.5.1",
-    "b4a": "^1.6.4",
-    "bsv2": "^2.0.15",
+    "b4a": "^1.6.7",
+    "bsv2": "^2.1.2",
     "hi-base32": "^0.5.1",
     "queue-tick": "^1.0.1",
-    "sodium-universal": "^4.0.0",
-    "streamx": "^2.15.2"
+    "sodium-universal": "^5.0.1",
+    "spacedht": "^0.0.6",
+    "streamx": "^2.22.0"
   },
   "devDependencies": {
-    "standard": "^17.1.0"
+    "standard": "^17.1.2"
   },
   "repository": {
     "type": "git",
