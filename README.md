@@ -10,18 +10,23 @@ npm install git+https://github.com/samooth/bitbeam
 
 ``` js
 const BitBeam = require('bitbeam')
+const { PrivateKey, PublicKey } = require('@bsv/sdk')
+
 // Alice Private Key
-const fromPrivKey = bsv.PrivKey.fromString("L1H2Zz694soUr9T3y...")
+const fromPrivKey = PrivateKey.fromWif("L1H2Zz694soUr9T3y...")
 // Bob Public Key
-const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
+const toPubKey = PublicKey.fromString("03516b6b5a609b35f22bdfc62...");
 
 // key is 32-byte unique passphrase to find the other side of your pipe.
 // once the other peer is discovered it is used to derive a noise keypair as well.
-// bitbeam uses ECDH to generate the unique passphrase when 
+// bitbeam uses symmetric ECDH to generate the unique passphrase when 
 // from: and to: are specified in the options object, being, 
 // from: the Bitcoin Private Key of Alice and
 // to: the Bitcoin Public Key of Bob
-const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
+const beam = new BitBeam({from: fromPrivKey, to: toPubKey})
+
+// You can also specify an optional context to isolate your application
+// const beam = new BitBeam({from: priv, to: pub}, { context: 'my-app-v1' })
 
 // to generate a random passphrase, leave the constructor empty and bitbeam will generate one for you
 // const beam = new BitBeam()
@@ -36,7 +41,7 @@ process.stdin.pipe(beam).pipe(process.stdout)
 First install it
 
 ```sh
-npm install -g git+https://github.com/samooth/bitbeam
+npm install -g bitbeam
 ```
 
 Then on one machine run
@@ -68,9 +73,15 @@ Likewise when you write to this stream it's emitted as `data` on the other peers
 
 If you do not pass a `key` into the constructor (the passphrase), one will be generated and put on `stream.key`.
 
+`key` can be:
+- A `string` passphrase.
+- An object `{ from, to }` where `from` is a `PrivateKey` and `to` is a `PublicKey` (or their string/WIF equivalents).
+
 `options` include:
 
 - `dht`: A DHT instance. Defaults to a new instance.
+- `announce`: Whether to announce the stream. Defaults to `true`.
+- `context`: A string used to further salt the ECDH shared secret derivation. Defaults to `'bitbeam'`.
 
 #### `stream.key`
 

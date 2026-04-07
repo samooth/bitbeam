@@ -7,18 +7,19 @@
     "bitbeam": "./bin.js"
   },
   "scripts": {
-    "test": "standard"
+    "test": "brittle test.js"
   },
   "dependencies": {
+    "@bsv/sdk": "^2.0.13",
     "@hyperswarm/dht": "^6.5.1",
-    "b4a": "^1.6.4",
-    "bsv2": "^2.0.15",
+    "b4a": "^1.8.0",
     "hi-base32": "^0.5.1",
     "queue-tick": "^1.0.1",
-    "sodium-universal": "^4.0.0",
-    "streamx": "^2.15.2"
+    "sodium-universal": "^5.0.1",
+    "streamx": "^2.25.0"
   },
   "devDependencies": {
+    "brittle": "^3.0.0",
     "standard": "^17.1.0"
   },
   "repository": {

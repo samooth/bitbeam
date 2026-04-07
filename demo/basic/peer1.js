@@ -1,10 +1,10 @@
 const BitBeam = require('../../index.js')
-const bsv = require('bsv2')
+const { PrivateKey, PublicKey } = require('@bsv/sdk')
 
 
-const alicePrivKey = bsv.PrivKey.fromString("L2viUUvqF7WzxMNTExSa277STdSRQX2vYpWE4pnxWuunHAoiLHsb")
-const bobPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62306744f8663e569c3edd3e55860af086d95a8e499")
-console.log("Alice PrivKey: ", alicePrivKey.toString())
+const alicePrivKey = PrivateKey.fromWif("L2viUUvqF7WzxMNTExSa277STdSRQX2vYpWE4pnxWuunHAoiLHsb")
+const bobPubKey = PublicKey.fromString("03516b6b5a609b35f22bdfc62306744f8663e569c3edd3e55860af086d95a8e499")
+console.log("Alice PrivKey: ", alicePrivKey.toWif())
 console.log("Bob PubKey", bobPubKey.toString())
 
 // key is 32-byte unique passphrase calculated using DH

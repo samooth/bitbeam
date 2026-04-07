@@ -1,6 +1,6 @@
 const { Duplex } = require('streamx')
 const sodium = require('sodium-universal')
-const { Ecies,Hash } = require('bsv2')
+const { PrivateKey, PublicKey, Hash } = require('@bsv/sdk')
 const b4a = require('b4a')
 const queueTick = require('queue-tick')
 const b32 = require('hi-base32')
@@ -36,8 +36,20 @@ module.exports = class BitBeam extends Duplex {
       options = {}
     }
     let announce = options.hasOwnProperty("announce") ? options.announce : true
+    const context = options.context || 'bitbeam'
+
     if ( key?.from &&  key?.to ) {
-      key = toBase32( Ecies.ivkEkM(key.from, key.to).kM  )
+      const from = key.from instanceof PrivateKey ? key.from : PrivateKey.fromWif(key.from.toString())
+      const to = key.to instanceof PublicKey ? key.to : PublicKey.fromString(key.to.toString())
+      
+      // Symmetric ECDH for shared secret
+      const sharedPoint = from.deriveSharedSecret(to)
+      const sharedSecret = b4a.from(sharedPoint.encode(true).slice(1))
+      
+      // Hash with context for robustness
+      const dhtKey = b4a.from(Hash.sha256(b4a.concat([sharedSecret, b4a.from(context)])))
+      
+      key = toBase32(dhtKey)
     }else if (!key){
       key = toBase32(randomBytes(32))
       announce = true
@@ -45,6 +57,8 @@ module.exports = class BitBeam extends Duplex {
 
     this.key = key
     this.announce = announce
+    this.context = context
+    this._nodeCreated = !options.dht
     this._node = options.dht || null
     this._server = null
     this._out = null
@@ -97,6 +111,7 @@ module.exports = class BitBeam extends Duplex {
     this._onopen = cb
 
     if (!this._node) this._node = new DHT({ ephemeral: true })
+    await this._node.ready()
 
     const onConnection = s => {
       s.on('data', (data) => {
@@ -109,12 +124,12 @@ module.exports = class BitBeam extends Duplex {
         if (s !== this._inc) return
         if (this._push(data) === false) s.pause()
       })
-      s.on('error',(err)=>{
-          this.emit('error', err)
-
+      s.on('error', (err) => {
+        this.emit('error', err)
       })
       s.on('end', () => {
-        this.emit('end', { host: this._node.host, port: this._node.port })
+        const addr = this._server ? this._server.address() : this._node.remoteAddress()
+        this.emit('end', { host: addr.host, port: addr.port })
         if (this._inc) return
         this._push(null)
       })
@@ -122,8 +137,9 @@ module.exports = class BitBeam extends Duplex {
       if (!this._out) {
         this._out = s
         this._out.on('error', (err) => this.destroy(err))
-        this._out.on('drain', () => this._ondrain(null))
-        this.emit('connected', { host: this._node.host, port: this._node.port })
+        this._out.on('drain', () => this._ondrainDone(null))
+        const addr = this._server ? this._server.address() : this._node.remoteAddress()
+        this.emit('connected', { host: addr.host, port: addr.port })
         this._onopenDone(null)
       }
     }
@@ -137,27 +153,26 @@ module.exports = class BitBeam extends Duplex {
       this._server.on('connection', onConnection)
       try {
         await this._server.listen(keyPair)
+        this._onopenDone(null)
+        queueTick(() => {
+          const addr = this._server.address()
+          this.emit('remote-address', { host: addr.host, port: addr.port })
+        })
       } catch (err) {
         this._onopenDone(err)
-        return
       }
-      this.emit('remote-address', { host: this._node.host, port: this._node.port })
       return
     }
 
     const connection = this._node.connect(keyPair.publicKey, { keyPair })
-    try {
-      await new Promise((resolve, reject) => {
-        connection.once('open', resolve)
-        connection.once('close', reject)
-        connection.once('error', reject)
-      })
-    } catch (err) {
+    connection.once('open', () => {
+      const addr = this._node.remoteAddress()
+      this.emit('remote-address', { host: addr.host, port: addr.port })
+      onConnection(connection)
+    })
+    connection.once('error', (err) => {
       this._onopenDone(err)
-      return
-    }
-    this.emit('remote-address', { host: this._node.host, port: this._node.port })
-    onConnection(connection)
+    })
   }
 
   _read (cb) {
@@ -172,6 +187,10 @@ module.exports = class BitBeam extends Duplex {
   }
 
   _write (data, cb) {
+    if (!this._out) {
+      this.once('connected', () => this._write(data, cb))
+      return
+    }
     if (this._out.write(data) !== false) return cb(null)
     this._ondrain = cb
   }
@@ -202,7 +221,7 @@ module.exports = class BitBeam extends Duplex {
   async _destroy (cb) {
     if (!this._node) return cb(null)
     if (this._server) await this._server.close().catch(e => undefined)
-    await this._node.destroy().catch(e => undefined)
+    if (this._nodeCreated) await this._node.destroy().catch(e => undefined)
     cb(null)
   }
 
