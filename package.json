@@ -19,6 +19,7 @@
     "streamx": "^2.22.0"
   },
   "devDependencies": {
+    "brittle": "^3.19.1",
     "standard": "^17.1.2"
   },
   "repository": {

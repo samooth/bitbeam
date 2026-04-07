@@ -21,7 +21,10 @@ const toPubKey = bsv.PubKey.fromString("03516b6b5a609b35f22bdfc62...");
 // from: and to: are specified in the options object, being, 
 // from: the Bitcoin Private Key of Alice and
 // to: the Bitcoin Public Key of Bob
-const beam = new BitBeam({from: fromPrivKey ,to: toPubKey})
+const beam = new BitBeam({from: fromPrivKey, to: toPubKey})
+
+// You can also specify an optional context to isolate your application
+// const beam = new BitBeam({from: priv, to: pub}, { context: 'my-app-v1' })
 
 // to generate a random passphrase, leave the constructor empty and bitbeam will generate one for you
 // const beam = new BitBeam()

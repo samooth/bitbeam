@@ -1,6 +1,6 @@
 const { Duplex } = require('streamx')
 const sodium = require('sodium-universal')
-const { Ecies } = require('bsv2')
+const { Ecies, Hash } = require('bsv2')
 const b4a = require('b4a')
 const queueTick = require('queue-tick')
 const b32 = require('hi-base32')
@@ -34,16 +34,23 @@ module.exports = class BitBeam extends Duplex {
     } else if (typeof options !== 'object') {
       options = {}
     }
-    let announce = options.hasOwnProperty('announce') ? options.announce : true
-    if (key?.from && key?.to) {
-      key = toBase32(Ecies.ivkEkM(key.from, key.to).kM)
-    } else if (!key) {
+    let announce = options.hasOwnProperty("announce") ? options.announce : true
+    const context = options.context || 'bitbeam'
+
+    if ( key?.from &&  key?.to ) {
+      let sharedKey = Ecies.ivkEkM(key.from, key.to).kM
+      if (context !== 'bitbeam' || options.context) {
+        sharedKey = Hash.sha256(b4a.concat([sharedKey, b4a.from(context)]))
+      }
+      key = toBase32(sharedKey)
+    }else if (!key){
       key = toBase32(randomBytes(32))
       announce = true
     }
 
     this.key = key
     this.announce = announce
+    this.context = context
     this._node = options.dht || null
     this._server = null
     this._out = null
