@@ -1,6 +1,6 @@
 # bitbeam
 
-A 1-1 end-to-end encrypted internet pipe powered by [Hyperswarm](https://github.com/hyperswarm/hyperswarm), Noise & Bitcoin
+A 1-1 end-to-end encrypted internet pipe powered by [Spaceswarm](https://github.com/samooth/spaceswarm), Noise & Bitcoin
 
 ```
 npm install git+https://github.com/samooth/bitbeam
