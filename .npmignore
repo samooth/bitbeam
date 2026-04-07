@@ -1,0 +1,16 @@
+# Tests and Research
+test.js
+test-bsv2.js
+research/
+demo/
+
+# Agent Documentation
+GEMINI.md
+SKILL.md
+
+# Developer Guides
+RELEASING.md
+
+# Lockfiles
+pnpm-lock.yaml
+package-lock.json
